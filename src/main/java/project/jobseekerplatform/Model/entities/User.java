@@ -22,12 +22,10 @@ public class User {
     private String name;
     private String email;
     private String username;
+    @JsonIgnore
     private String password;
     private String profilePicture;
     private String bio;
-
-
-
     @ManyToMany
     @JoinTable(name = "followers_following",
             joinColumns = @JoinColumn(name = "follower_id"),
@@ -40,12 +38,10 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     @JsonIgnore
-
     private List<Like> likes;
 
     @OneToMany(mappedBy = "user")
     @JsonIgnore
-
     private List<Comment> comments;
 
     @OneToMany(mappedBy = "user")

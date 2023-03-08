@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
         user.setUsername(userDtoSignup.getUsername());
         user.setPassword(userDtoSignup.getPassword());
         userRepo.save(user);
-        return ResponseEntity.status(HttpStatus.OK).body("User created");
+        return ResponseEntity.status(HttpStatus.OK).body("User" + userDtoSignup +"created");
     }
 
     @Override
@@ -44,10 +44,7 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new UserDtoDetails(user.getId(), user.getName(), user.getEmail(), user.getProfilePicture(),
-                        user.getBio(), convertToUserDtoBasic(user.getFollowing()), convertToUserDtoBasic(user.getFollowers()),
-                        convertToJobDto(user.getJobs()), convertToPostDto(user.getPosts())));
+        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
 
@@ -70,7 +67,8 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(convertToUserDtoBasic(user.getFollowers()));
+        return ResponseEntity.status(HttpStatus.OK).body(
+                user.getFollowing().stream().map(following -> modelMapper.map(following, UserDtoBasic.class)).toList());
     }
 
     @Override
@@ -79,7 +77,8 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(convertToUserDtoBasic(user.getFollowing()));
+        return ResponseEntity.status(HttpStatus.OK).body(
+                user.getFollowing().stream().map(following -> modelMapper.map(following, UserDtoBasic.class)).toList());
     }
 
     private List <JobDto> convertToJobDto(List<Job> jobs) {
@@ -90,12 +89,5 @@ public class UserServiceImpl implements UserService {
 
     private List<PostDto> convertToPostDto(List<Post> posts) {
         return posts.stream().map(post -> modelMapper.map(post, PostDto.class)).toList();
-    }
-
-    private List<UserDtoBasic> convertToUserDtoBasic(List<User> users) {
-//        return users.stream().map(user -> {
-//            return new UserDtoBasic(user.getId(), user.getName(), user.getEmail(), user.getProfilePicture(), user.getBio());
-//        }).toList();
-        return users.stream().map(user -> modelMapper.map(user, UserDtoBasic.class)).toList();
     }
 }

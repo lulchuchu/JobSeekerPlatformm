@@ -16,17 +16,17 @@ import java.util.List;
  * A DTO for the {@link project.jobseekerplatform.Model.entities.Post} entity
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PostDto implements Serializable {
-    private final int id;
-    private final String content;
-    private final LocalDate postedDate;
-//    private final int userId;
-//    private final String username;
-//    private final String profilePicture;
-    private final UserDtoBasic user;
+    private int id;
+    private String content;
+    private LocalDate postedDate;
+    private String images;
+    private UserDtoBasic user;
     @JsonIgnore
-    private final List<Like> likes;
+    private List<Like> likes;
     @JsonIgnore
-    private final List<Comment> comment;
+    private List<Comment> comment;
 
 }

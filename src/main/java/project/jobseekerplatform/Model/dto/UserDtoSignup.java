@@ -1,6 +1,7 @@
 package project.jobseekerplatform.Model.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -8,10 +9,11 @@ import java.io.Serializable;
  * A DTO for the {@link project.jobseekerplatform.Model.entities.User} entity
  */
 @Data
+@NoArgsConstructor
 public class UserDtoSignup implements Serializable {
-    private final Integer id;
-    private final String name;
-    private final String email;
-    private final String username;
-    private final String password;
+    private Integer id;
+    private String name;
+    private String email;
+    private String username;
+    private String password;
 }

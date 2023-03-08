@@ -13,8 +13,4 @@ public interface UserRepo extends JpaRepository<User, Integer> {
 
     List<User> findAllById(int userId);
 
-//    @Modifying
-//    @Transactional
-//    void updateFollow()
-
 }

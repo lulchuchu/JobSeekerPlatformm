@@ -19,6 +19,7 @@ public class Post {
     private int id;
     private String content;
     private LocalDate postedDate;
+    private String images;
 
     @ManyToOne
     private User user;
