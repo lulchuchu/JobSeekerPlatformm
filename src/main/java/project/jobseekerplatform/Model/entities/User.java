@@ -1,13 +1,10 @@
     package project.jobseekerplatform.Model.entities;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import jakarta.persistence.*;
-import lombok.Data;
-import lombok.ToString;
+    import com.fasterxml.jackson.annotation.JsonIgnore;
+    import jakarta.persistence.*;
+    import lombok.Data;
 
-import java.util.List;
+    import java.util.List;
 
 @Data
 @Entity
@@ -29,7 +26,8 @@ public class User {
     @ManyToMany
     @JoinTable(name = "followers_following",
             joinColumns = @JoinColumn(name = "follower_id"),
-            inverseJoinColumns = @JoinColumn(name = "following_id"))
+            inverseJoinColumns = @JoinColumn(name = "following_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"follower_id", "following_id"}))
     @JsonIgnore
     private List<User> following;
     @ManyToMany(mappedBy = "following")
@@ -51,4 +49,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Post> posts;
+
+    @ManyToMany(mappedBy = "users")
+    private List<Application> applications;
 }

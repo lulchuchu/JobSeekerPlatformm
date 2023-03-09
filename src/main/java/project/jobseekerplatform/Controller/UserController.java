@@ -32,12 +32,17 @@ public class UserController {
     }
 
     @GetMapping("/following/{userId}")
-    public ResponseEntity<?> listFollowing(@PathVariable int userId){
+    public ResponseEntity<?> listFollowing(@PathVariable int userId) {
         return userService.listFollowing(userId);
     }
 
     @GetMapping("/followers/{userId}")
-    public ResponseEntity<?> listFollowers(@PathVariable int userId){
+    public ResponseEntity<?> listFollowers(@PathVariable int userId) {
         return userService.listFollowers(userId);
+    }
+
+    @GetMapping("/applying")
+    public ResponseEntity<?> listApplying(@RequestParam int userId) {
+        return userService.listApplying(userId);
     }
 }

@@ -5,14 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import project.jobseekerplatform.Model.dto.*;
-import project.jobseekerplatform.Model.entities.Job;
+import project.jobseekerplatform.Model.dto.PostDto;
+import project.jobseekerplatform.Model.dto.UserDtoBasic;
+import project.jobseekerplatform.Model.dto.UserDtoSignup;
 import project.jobseekerplatform.Model.entities.Post;
 import project.jobseekerplatform.Model.entities.User;
 import project.jobseekerplatform.Persistences.UserRepo;
 import project.jobseekerplatform.Services.UserService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -40,51 +42,55 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<?> getDetails(int userId) {
-        User user = userRepo.findById(userId).orElse(null);
-        if (user == null) {
+        Optional<User> user = userRepo.findById(userId);
+        if (user.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(user);
+        return ResponseEntity.status(HttpStatus.OK).body(user.get());
     }
 
 
     @Override
     public ResponseEntity<?> addFollow(int userId, int followId) {
-        User user = userRepo.findById(userId).orElse(null);
-        User follow = userRepo.findById(followId).orElse(null);
-        if (user == null || follow == null) {
+        Optional<User> user = userRepo.findById(userId);
+        Optional<User> follow = userRepo.findById(followId);
+        if (user.isEmpty() || follow.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
-        user.getFollowing().add(follow);
-        follow.getFollowers().add(user);
-        userRepo.save(user);
+        user.get().getFollowing().add(follow.get());
+        follow.get().getFollowers().add(user.get());
+        userRepo.save(user.get());
         return ResponseEntity.status(HttpStatus.OK).body("Followed");
     }
 
     @Override
     public ResponseEntity<?> listFollowers(int userId) {
-        User user = userRepo.findById(userId).orElse(null);
-        if (user == null) {
+        Optional<User> user = userRepo.findById(userId);
+        if (user.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
         return ResponseEntity.status(HttpStatus.OK).body(
-                user.getFollowing().stream().map(following -> modelMapper.map(following, UserDtoBasic.class)).toList());
+                user.get().getFollowing().stream().map(following -> modelMapper.map(following, UserDtoBasic.class)).toList());
     }
 
     @Override
     public ResponseEntity<?> listFollowing(int userId) {
-        User user = userRepo.findById(userId).orElse(null);
-        if (user == null) {
+        Optional<User> user = userRepo.findById(userId);
+        if (user.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
         return ResponseEntity.status(HttpStatus.OK).body(
-                user.getFollowing().stream().map(following -> modelMapper.map(following, UserDtoBasic.class)).toList());
+                user.get().getFollowing().stream().map(following -> modelMapper.map(following, UserDtoBasic.class)).toList());
     }
 
-    private List <JobDto> convertToJobDto(List<Job> jobs) {
-        return jobs.stream().map(job -> {
-            return modelMapper.map(job, JobDto.class);
-        }).toList();
+    @Override
+    public ResponseEntity<?> listApplying(int userId) {
+        Optional<User> user = userRepo.findById(userId);
+        if (user.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                user.get().getApplications());
     }
 
     private List<PostDto> convertToPostDto(List<Post> posts) {

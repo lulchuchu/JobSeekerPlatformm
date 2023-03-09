@@ -10,8 +10,10 @@ import project.jobseekerplatform.Model.entities.Post;
 import project.jobseekerplatform.Model.entities.User;
 import project.jobseekerplatform.Persistences.PostRepo;
 import project.jobseekerplatform.Persistences.UserRepo;
+import project.jobseekerplatform.Services.FileStorageService;
 import project.jobseekerplatform.Services.PostService;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,14 +22,15 @@ public class PostServiceImpl implements PostService {
     private final ModelMapper modelMapper;
     private final PostRepo postRepo;
     private final UserRepo userRepo;
-
+    private final FileStorageService fileStorageService;
 
 
     @Autowired
-    public PostServiceImpl(ModelMapper modelMapper, PostRepo postRepo, UserRepo userRepo) {
+    public PostServiceImpl(ModelMapper modelMapper, PostRepo postRepo, UserRepo userRepo, FileStorageService fileStorageService) {
         this.modelMapper = modelMapper;
         this.postRepo = postRepo;
         this.userRepo = userRepo;
+        this.fileStorageService = fileStorageService;
     }
 
     @Override
@@ -39,9 +42,6 @@ public class PostServiceImpl implements PostService {
         List<User> followingPeople = user.getFollowing();
         List<PostDto> newsfeed = new ArrayList<>();
         for (User follower : followingPeople) {
-//            newsfeed.addAll(postRepo.findAllByUserId(follower.getId()).stream().map(p -> {
-//                return new PostDto(p.getId(), p.getContent(), p.getPostedDate(), p.getUser(), p.getLikes(), p.getComment());
-//            }).toList());
             newsfeed.addAll(postRepo.findAllByUserId(follower.getId()).stream().map(p -> modelMapper.map(p, PostDto.class)).toList());
         }
         return ResponseEntity.status(HttpStatus.OK).body(newsfeed);
@@ -59,7 +59,10 @@ public class PostServiceImpl implements PostService {
         post.setComment(postDto.getComment());
         post.setLikes(postDto.getLikes());
         post.setComment(postDto.getComment());
-        post.setPostedDate(postDto.getPostedDate());
+        post.setPostedDate(LocalDate.now());
+        post.setImages(postDto.getImages());
+
+
         postRepo.save(post);
         return ResponseEntity.status(HttpStatus.OK).body("Post created");
     }

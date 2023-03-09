@@ -6,11 +6,9 @@ import org.modelmapper.spi.MappingContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-import project.jobseekerplatform.Model.dto.JobDto;
 import project.jobseekerplatform.Model.dto.PostDto;
 import project.jobseekerplatform.Model.dto.UserDtoBasic;
 import project.jobseekerplatform.Model.entities.Post;
-import project.jobseekerplatform.Model.entities.User;
 
 @Configuration
 public class Config {
