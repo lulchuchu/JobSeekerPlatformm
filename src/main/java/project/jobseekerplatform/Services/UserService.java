@@ -1,14 +1,22 @@
 package project.jobseekerplatform.Services;
 
-import org.springframework.http.ResponseEntity;
+import project.jobseekerplatform.Model.dto.UserDtoBasic;
 import project.jobseekerplatform.Model.dto.UserDtoSignup;
+import project.jobseekerplatform.Model.entities.Application;
+import project.jobseekerplatform.Model.entities.User;
+
+import java.util.List;
 
 public interface UserService {
-    ResponseEntity<?> signUp(UserDtoSignup userDtoSignup);
-    ResponseEntity<?> getDetails(int userId);
-    ResponseEntity<?> addFollow(int userId, int followId);
-    ResponseEntity<?> listFollowers(int userId);
-    ResponseEntity<?> listFollowing(int userId);
+    void signUp(UserDtoSignup userDtoSignup);
 
-    ResponseEntity<?> listApplying(int userId);
+    User getDetails(int userId);
+
+    void addFollow(int userId, int followId);
+
+    List<UserDtoBasic> listFollowers(int userId);
+
+    List<UserDtoBasic> listFollowing(int userId);
+
+    List<Application> listApplying(int userId);
 }

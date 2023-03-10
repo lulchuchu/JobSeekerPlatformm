@@ -18,31 +18,33 @@ public class UserController {
     }
     @GetMapping("/details/{userId}")
     public ResponseEntity<?> getDetails(@PathVariable int userId){
-        return userService.getDetails(userId);
+        return ResponseEntity.ok(userService.getDetails(userId));
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody UserDtoSignup userDtoSignup){
-        return userService.signUp(userDtoSignup);
+    public ResponseEntity<?> signup(@RequestBody UserDtoSignup userDtoSignup) {
+        userService.signUp(userDtoSignup);
+        return ResponseEntity.ok("User created successful");
     }
 
     @PutMapping("/addfollow/{userId}/{followId}")
-    public ResponseEntity<?> addFollow(@PathVariable int userId, @PathVariable int followId){
-        return userService.addFollow(userId, followId);
+    public ResponseEntity<?> addFollow(@PathVariable int userId, @PathVariable int followId) {
+        userService.addFollow(userId, followId);
+        return ResponseEntity.ok("Follow added successful");
     }
 
     @GetMapping("/following/{userId}")
     public ResponseEntity<?> listFollowing(@PathVariable int userId) {
-        return userService.listFollowing(userId);
+        return ResponseEntity.ok(userService.listFollowing(userId));
     }
 
     @GetMapping("/followers/{userId}")
     public ResponseEntity<?> listFollowers(@PathVariable int userId) {
-        return userService.listFollowers(userId);
+        return ResponseEntity.ok(userService.listFollowers(userId));
     }
 
     @GetMapping("/applying")
     public ResponseEntity<?> listApplying(@RequestParam int userId) {
-        return userService.listApplying(userId);
+        return ResponseEntity.ok(userService.listApplying(userId));
     }
 }

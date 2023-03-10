@@ -2,8 +2,6 @@ package project.jobseekerplatform.Services.Implement;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import project.jobseekerplatform.Model.dto.PostDto;
 import project.jobseekerplatform.Model.entities.Post;
@@ -34,24 +32,24 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ResponseEntity<?> getNewsFeed(int userId) {
+    public List<PostDto> getNewsFeed(int userId) {
         User user = userRepo.findById(userId).orElse(null);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            throw new RuntimeException("User not found");
         }
         List<User> followingPeople = user.getFollowing();
         List<PostDto> newsfeed = new ArrayList<>();
         for (User follower : followingPeople) {
             newsfeed.addAll(postRepo.findAllByUserId(follower.getId()).stream().map(p -> modelMapper.map(p, PostDto.class)).toList());
         }
-        return ResponseEntity.status(HttpStatus.OK).body(newsfeed);
+        return newsfeed;
     }
 
     @Override
-    public ResponseEntity<?> createPost(PostDto postDto){
+    public void createPost(PostDto postDto) {
         User user = userRepo.findById(postDto.getUser().getId()).orElse(null);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            throw new RuntimeException("User not found");
         }
         Post post = new Post();
         post.setUser(user);
@@ -61,30 +59,25 @@ public class PostServiceImpl implements PostService {
         post.setComment(postDto.getComment());
         post.setPostedDate(LocalDate.now());
         post.setImages(postDto.getImages());
-
-
         postRepo.save(post);
-        return ResponseEntity.status(HttpStatus.OK).body("Post created");
     }
 
     @Override
-    public ResponseEntity<?> deletePost(int postId) {
+    public void deletePost(int postId) {
         Post post = postRepo.findById(postId).orElse(null);
         if (post == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
+            throw new RuntimeException("User not found");
         }
         postRepo.deleteById(postId);
-        return ResponseEntity.status(HttpStatus.OK).body("Post deleted");
     }
 
     @Override
-    public ResponseEntity<?> updatePost(PostDto postDto) {
+    public void updatePost(PostDto postDto) {
         Post post = postRepo.findById(postDto.getId()).orElse(null);
         if (post == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
+            throw new RuntimeException("User not found");
         }
         postRepo.updatePostById(postDto.getId(), postDto.getContent());
-        return ResponseEntity.status(HttpStatus.OK).body("Post updated");
     }
 
 }

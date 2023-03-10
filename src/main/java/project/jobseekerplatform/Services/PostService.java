@@ -1,12 +1,16 @@
 package project.jobseekerplatform.Services;
 
-import org.springframework.http.ResponseEntity;
 import project.jobseekerplatform.Model.dto.PostDto;
 
+import java.util.List;
+
 public interface PostService {
-    ResponseEntity<?> createPost(PostDto postDto);
-    ResponseEntity<?> deletePost(int postId);
-    ResponseEntity<?> updatePost(PostDto postDto);
-    ResponseEntity<?> getNewsFeed(int userId);
+    void createPost(PostDto postDto);
+
+    void deletePost(int postId);
+
+    void updatePost(PostDto postDto);
+
+    List<PostDto> getNewsFeed(int userId);
 
 }
